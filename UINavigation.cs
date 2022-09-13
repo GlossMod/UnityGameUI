@@ -1,6 +1,7 @@
 ﻿
 using System;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace UnityGameUI
 {
@@ -26,7 +27,7 @@ namespace UnityGameUI
             UINavigation.panel = panel;
 
             elementX = (int)(-panel.GetComponent<RectTransform>().rect.width / 2 + 60);
-            elementY = (int)(panel.GetComponent<RectTransform>().rect.height / 2 - 40);
+            elementY = (int)(panel.GetComponent<RectTransform>().rect.height / 2 - 20);
 
 
             // 创建导航
@@ -38,13 +39,17 @@ namespace UnityGameUI
         {
             foreach (var item in navigations)
             {
-                string backgroundColor = "#8C9EFFFF";
+                string backgroundColor = "#616161FF";
                 Vector3 localPosition = new Vector3(elementX, elementY, 0);
-                UIControls.createUIButton(panel, backgroundColor, item.button, item.SetActive, localPosition);
+                GameObject button = UIControls.createUIButton(panel, backgroundColor, item.button, item.SetActive, localPosition);
+                button.GetComponent<RectTransform>().sizeDelta = new Vector2(120, 30);    // 设置按钮大小
+                // 设置字体颜色
+                button.GetComponentInChildren<Text>().color = new Color(255, 255, 255, 1);
+
 
                 item.SetActive(item.show);
 
-                elementY -= 60;
+                elementY -= 30;
 
             }
         }

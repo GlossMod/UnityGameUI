@@ -1,5 +1,6 @@
 ﻿
 using System;
+using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
 using UnityEngine.Events;
@@ -327,7 +328,7 @@ namespace UnityGameUI
         }
 
         // 创建下拉框
-        public static GameObject CreateDropdown(UIControls.Resources resources)
+        public static GameObject CreateDropdown(UIControls.Resources resources, List<string> options, Color LabelColor)
         {
             GameObject gameObject = UIControls.CreateUIElementRoot("Dropdown", UIControls.s_ThickElementSize);
             GameObject gameObject2 = UIControls.CreateUIObject("Label", gameObject);
@@ -393,12 +394,16 @@ namespace UnityGameUI
             Text text2 = gameObject2.AddComponent<Text>();
             UIControls.SetDefaultTextValues(text2);
             text2.alignment = TextAnchor.MiddleLeft;
+            // 设置字体颜色
+            text2.color = LabelColor;
+            // UIControls.HTMLString2Color("#EFEBE9FF");
 
             Image image5 = gameObject3.AddComponent<Image>();
             image5.sprite = resources.dropdown;
             Image image6 = gameObject.AddComponent<Image>();
             image6.sprite = resources.standard;
             image6.color = UIControls.s_DefaultSelectableColor;
+            //image6.color = UIControls.HTMLString2Color("#EFEBE9FF");
             image6.type = Image.Type.Sliced;
 
             Dropdown dropdown = gameObject.AddComponent<Dropdown>();
@@ -408,19 +413,29 @@ namespace UnityGameUI
             dropdown.captionText = text2;
             dropdown.itemText = text;
 
-            text.text = "Option A";
-            dropdown.options.Add(new Dropdown.OptionData
+            text.text = options[0];
+            foreach (var item in options)
             {
-                text = "Option A"
-            });
-            dropdown.options.Add(new Dropdown.OptionData
-            {
-                text = "Option B"
-            });
-            dropdown.options.Add(new Dropdown.OptionData
-            {
-                text = "Option C"
-            });
+                
+                dropdown.options.Add(new Dropdown.OptionData
+                {
+                    text = item
+                });
+            }
+            
+            //text.text = "Option A";
+            //dropdown.options.Add(new Dropdown.OptionData
+            //{
+            //    text = "Option A"
+            //});
+            //dropdown.options.Add(new Dropdown.OptionData
+            //{
+            //    text = "Option B"
+            //});
+            //dropdown.options.Add(new Dropdown.OptionData
+            //{
+            //    text = "Option C"
+            //});
 
             dropdown.RefreshShownValue();
 
@@ -716,7 +731,7 @@ namespace UnityGameUI
         }
 
         // 创建下拉菜单
-        public static GameObject createUIDropDown(GameObject parent, Sprite BgSprite, Sprite ScrollbarSprite, Sprite DropDownSprite, Sprite CheckmarkSprite, Sprite customMaskSprite)
+        public static GameObject createUIDropDown(GameObject parent, Sprite BgSprite, Sprite ScrollbarSprite, Sprite DropDownSprite, Sprite CheckmarkSprite, Sprite customMaskSprite, List<string> options, Color LabelColor)
         {
             UIControls.Resources uiResources = new UIControls.Resources();
             uiResources.standard = BgSprite;    // 设置背景和处理图像
@@ -726,7 +741,7 @@ namespace UnityGameUI
             uiResources.mask = customMaskSprite;     // 设置视口蒙版
 
             Debug.Log("创建 UI 下拉菜单");
-            var uiDropdown = UIControls.CreateDropdown(uiResources);
+            var uiDropdown = UIControls.CreateDropdown(uiResources, options, LabelColor);
             uiDropdown.transform.SetParent(parent.transform, false);
 
             return uiDropdown;
