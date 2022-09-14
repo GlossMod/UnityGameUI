@@ -659,7 +659,7 @@ namespace UnityGameUI
         }
 
         // 创建按钮
-        public static GameObject createUIButton(GameObject parent, string backgroundColor, string Text, UnityAction action, Vector3 localPosition)
+        public static GameObject createUIButton(GameObject parent, string backgroundColor, string Text, UnityAction action, Vector3 localPosition = new Vector3())
         {
             Debug.Log("创建UI按钮");
 

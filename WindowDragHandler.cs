@@ -7,6 +7,7 @@ using UnityEngine.EventSystems;
 
 namespace UnityGameUI
 {
+    // 窗口拖动相关注入
     public class WindowDragHandler : MonoBehaviour
     {
         public static WindowDragHandler instance;
@@ -26,6 +27,7 @@ namespace UnityGameUI
         }
 
         [HarmonyPostfix]
+        [HarmonyPatch(typeof(EventTrigger), nameof(EventTrigger.OnBeginDrag))]
         public static void OnBeginDrag(PointerEventData eventData)
         {
 
@@ -40,6 +42,7 @@ namespace UnityGameUI
         }
 
         [HarmonyPostfix]
+        [HarmonyPatch(typeof(EventTrigger), nameof(EventTrigger.OnDrag))]
         public static void OnDrag(PointerEventData eventData)
         {
 
@@ -54,6 +57,7 @@ namespace UnityGameUI
         }
 
         [HarmonyPostfix]
+        [HarmonyPatch(typeof(EventTrigger), nameof(EventTrigger.OnEndDrag))]
         public static void OnEndDrag(PointerEventData eventData)
         {
 

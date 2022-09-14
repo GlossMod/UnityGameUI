@@ -22,8 +22,7 @@ namespace UnityGameUI
 
             GameObject uiPanel = UIControls.createUIPanel(canvas, "70", "300", null);  // 创建面板
             uiPanel.GetComponent<Image>().color = UIControls.HTMLString2Color("#37474FFF"); // 设置背景颜色
-
-
+           
             // 创建标题
             Sprite txtBgSprite = UIControls.createSpriteFrmTexture(UIControls.createDefaultTexture("#7AB900FF"));
             GameObject uiText = UIControls.createUIText(uiPanel, txtBgSprite, "#FFFFFFFF");
