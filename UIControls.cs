@@ -806,7 +806,7 @@ namespace UnityGameUI
         }
 
         // 创建文本
-        public static GameObject createUIText(GameObject parent, Sprite BgSprite, string textColor)
+        public static GameObject createUIText(GameObject parent, Sprite BgSprite, string textColor = null )
         {
             UIControls.Resources uiResources = new UIControls.Resources();
             uiResources.background = BgSprite;
@@ -816,7 +816,7 @@ namespace UnityGameUI
             uiText.transform.SetParent(parent.transform, false);
 
             //uiText.transform.GetChild(0).GetComponent<Text>().font = (Font)Resources.GetBuiltinResource<Font>("Arial.ttf"); // 设置字体
-            uiText.GetComponent<Text>().color = HTMLString2Color(textColor);
+            if (textColor != null) uiText.GetComponent<Text>().color = HTMLString2Color(textColor);
             return uiText;
         }
 
