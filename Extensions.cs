@@ -27,7 +27,10 @@ namespace UnityGameUI
             b = Convert.ToByte(tmp.Substring(4, 2), 16);
             if (tmp.Length == 8)
                 a = Convert.ToByte(tmp.Substring(6, 2), 16);
-
+            else
+            {
+                return new Color((float)r / 255f, (float)g / 255f, (float)b / 255f);
+            }
             return new Color32(r, g, b, a);
         }
 
