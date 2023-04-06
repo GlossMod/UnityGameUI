@@ -7,64 +7,61 @@ using UnityEngine.EventSystems;
 
 namespace UnityGameUI
 {
-    // 窗口拖动相关注入
-    internal class WindowDragHandler : MonoBehaviour
+    // 窗口拖动相关
+    // http://gyanendushekhar.com/2019/11/11/move-canvas-ui-mouse-drag-unity-3d-drag-drop-ui/
+    internal class WindowDragHandler : MonoBehaviour, IDragHandler, IBeginDragHandler, IEndDragHandler
     {
-        public static WindowDragHandler instance;
-        private const int NON_EXISTING_TOUCH = -98456;
-        private static RectTransform rectTransform;
-        private static int pointerId = NON_EXISTING_TOUCH;
-        private static Vector2 initialTouchPos;
+        private Vector2 _lastMousePosition;
 
-        public WindowDragHandler()
+        public void OnBeginDrag(PointerEventData eventData)
         {
-            instance = this;
+            _lastMousePosition = eventData.position;
         }
 
-        public void Awake()
+        public void OnDrag(PointerEventData eventData)
         {
-            rectTransform = gameObject.GetComponent<RectTransform>();
-        }
+            var currentMousePosition = eventData.position;
+            var diff = currentMousePosition - _lastMousePosition;
+            var rect = GetComponent<RectTransform>();
 
-        [HarmonyPostfix]
-        [HarmonyPatch(typeof(EventTrigger), nameof(EventTrigger.OnBeginDrag))]
-        public static void OnBeginDrag(PointerEventData eventData)
-        {
-
-            if (pointerId != NON_EXISTING_TOUCH)
+            var position = rect.position;
+            var newPosition = position + new Vector3(diff.x, diff.y, transform.position.z);
+            var oldPos = position;
+            position = newPosition;
+            rect.position = position;
+            if (!IsRectTransformInsideSreen(rect))
             {
-                eventData.pointerDrag = null;
-                return;
+                rect.position = oldPos;
             }
 
-            pointerId = eventData.pointerId;
-            RectTransformUtility.ScreenPointToLocalPointInRectangle(rectTransform, eventData.position, Camera.current, out initialTouchPos);
+            _lastMousePosition = currentMousePosition;
         }
 
-        [HarmonyPostfix]
-        [HarmonyPatch(typeof(EventTrigger), nameof(EventTrigger.OnDrag))]
-        public static void OnDrag(PointerEventData eventData)
+        public void OnEndDrag(PointerEventData eventData)
         {
-
-            if (eventData.pointerId != pointerId)
-                return;
-
-            Vector2 touchPos;
-            RectTransformUtility.ScreenPointToLocalPointInRectangle(rectTransform, eventData.position, Camera.current, out touchPos);
-
-            var tmp = touchPos - initialTouchPos;
-            rectTransform.gameObject.transform.position += new Vector3(tmp.x, tmp.y, Camera.current.nearClipPlane);
         }
 
-        [HarmonyPostfix]
-        [HarmonyPatch(typeof(EventTrigger), nameof(EventTrigger.OnEndDrag))]
-        public static void OnEndDrag(PointerEventData eventData)
+        private bool IsRectTransformInsideSreen(RectTransform rectTransform)
         {
+            var isInside = false;
+            var corners = new Vector3[4];
+            rectTransform.GetWorldCorners(corners);
+            var visibleCorners = 0;
+            var rect = new Rect(0, 0, Screen.width, Screen.height);
+            foreach (var corner in corners)
+            {
+                if (rect.Contains(corner))
+                {
+                    visibleCorners++;
+                }
+            }
 
-            if (eventData.pointerId != pointerId)
-                return;
+            if (visibleCorners == 4)
+            {
+                isInside = true;
+            }
 
-            pointerId = NON_EXISTING_TOUCH;
+            return isInside;
         }
 
     }
