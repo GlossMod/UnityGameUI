@@ -42,5 +42,25 @@ namespace UnityGameUI
             return defaultValue;
         }
 
+        public static long ConvertToLongDef(this string input, long defaultValue)
+        {
+            long result;
+            if (long.TryParse(input, out result))
+            {
+                return result;
+            }
+            return defaultValue;
+        }
+
+        public static float ConvertToFloatDef(this string input, float defaultValue)
+        {
+            float result;
+            if (float.TryParse(input, out result))
+            {
+                return result;
+            }
+            return defaultValue;
+        }
+
     }
 }
